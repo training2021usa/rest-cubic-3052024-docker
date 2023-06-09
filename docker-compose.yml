@@ -1,0 +1,12 @@
+version: "3.8"
+
+services: 
+
+  rest-cubic-03052023:
+    container_name: rest-cubic-03052023-container
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "9090:8080"   
+    restart: on-failure

@@ -1,0 +1,51 @@
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
+    
+     <finalName>${project.artifactId}</finalName>                //war will be created with this name
+</build>
+
+=======================================
+
+# if mysql is not inside container(ie running on host system)
+spring.datasource.url = jdbc:mysql://host.docker.internal:3306/rest2023?createDatabaseIfNotExist=true&useSSL=false
+
+
+==============Dockerfile.txt===========
+#pulling java11 image from docker hub
+#FROM adoptopenjdk/openjdk11
+
+#pulling java8 image from docker hub
+
+FROM adoptopenjdk/openjdk8:ubi
+
+LABEL mentainer="prabballia@gmail.com"
+
+#this folder is created inside docker container
+WORKDIR /technohunk444
+
+
+COPY  target/rest-cubic-03052023.war  /technohunk444/rest-cubic-03052023.war
+#container inside runnig port need to expose to run from outside(browser)
+expose 8080  
+
+ENTRYPOINT ["java", "-jar", "rest-cubic-03052023.war"]
+====================docker-compose.yml==============
+
+version: "3.8"
+
+services: 
+
+  rest-cubic-03052023:
+    container_name: rest-cubic-03052023-container
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "9090:8080"    //exposed to 9090
+    restart: on-failure
